@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import UserSkill, UserStepProgress, Achievement, UserAchievement
-from learning_paths.serializers import SkillSerializer, PathStepSerializer
+from learning_paths.serializers import SkillSerializer, StepSerializer
 
 class UserSkillSerializer(serializers.ModelSerializer):
     skill = SkillSerializer(read_only=True)
@@ -11,7 +11,7 @@ class UserSkillSerializer(serializers.ModelSerializer):
         read_only_fields = ('user', 'is_verified', 'verification_method', 'acquired_at', 'updated_at')
 
 class UserStepProgressSerializer(serializers.ModelSerializer):
-    path_step = PathStepSerializer(read_only=True)
+    step = StepSerializer(read_only=True)
     
     class Meta:
         model = UserStepProgress

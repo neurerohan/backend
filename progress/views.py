@@ -8,7 +8,7 @@ from .serializers import (
     AchievementSerializer, UserAchievementSerializer
 )
 from users.permissions import IsOwnerOrReadOnly
-from learning_paths.models import PathStep
+from learning_paths.models import Step
 
 class UserSkillViewSet(viewsets.ModelViewSet):
     serializer_class = UserSkillSerializer
@@ -49,7 +49,7 @@ class UserStepProgressViewSet(viewsets.ModelViewSet):
                 
                 # Award XP to user
                 user = progress.user
-                user.xp_points += progress.path_step.xp_reward
+                user.xp_points += progress.step.xp_reward
                 
                 # Level up if needed (simple level calculation)
                 new_level = max(1, int(user.xp_points / 1000) + 1)

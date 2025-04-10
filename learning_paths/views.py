@@ -2,8 +2,8 @@ from rest_framework import viewsets, permissions, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
-from .models import Skill, LearningPath, PathStep, UserLearningPath
-from .serializers import SkillSerializer, LearningPathSerializer, PathStepSerializer, UserLearningPathSerializer
+from .models import Skill, LearningPath, Step, UserLearningPath
+from .serializers import SkillSerializer, LearningPathSerializer, StepSerializer, UserLearningPathSerializer
 from users.permissions import IsOwnerOrReadOnly
 
 class SkillViewSet(viewsets.ReadOnlyModelViewSet):
@@ -79,13 +79,13 @@ class LearningPathViewSet(viewsets.ModelViewSet):
         
         return Response({'detail': 'Rating submitted successfully.'})
 
-class PathStepViewSet(viewsets.ModelViewSet):
-    serializer_class = PathStepSerializer
+class StepViewSet(viewsets.ModelViewSet):
+    serializer_class = StepSerializer
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
         learning_path_id = self.kwargs.get('learning_path_pk')
-        return PathStep.objects.filter(learning_path_id=learning_path_id).order_by('order')
+        return Step.objects.filter(learning_path_id=learning_path_id).order_by('order')
     
     def perform_create(self, serializer):
         learning_path_id = self.kwargs.get('learning_path_pk')
@@ -114,8 +114,8 @@ class UserLearningPathViewSet(viewsets.ModelViewSet):
             return Response({'detail': 'Step ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            step = PathStep.objects.get(id=step_id, learning_path=enrollment.learning_path)
-        except PathStep.DoesNotExist:
+            step = Step.objects.get(id=step_id, learning_path=enrollment.learning_path)
+        except Step.DoesNotExist:
             return Response({'detail': 'Step not found in this learning path.'}, status=status.HTTP_404_NOT_FOUND)
         
         # Update current step
