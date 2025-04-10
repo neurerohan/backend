@@ -106,7 +106,7 @@ backend/
    cd backend
    \`\`\`
 
-2. Create a virtual environment:
+2. Create a virtual environment:..
    \`\`\`
    python -m venv venv
    \`\`\`
