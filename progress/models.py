@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-from learning_paths.models import LearningPath, PathStep, Skill
+from learning_paths.models import LearningPath, Step, Skill
 
 class UserSkill(models.Model):
     """Skills acquired by users"""
@@ -31,7 +31,7 @@ class UserSkill(models.Model):
 class UserStepProgress(models.Model):
     """User progress on individual path steps"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='step_progress')
-    path_step = models.ForeignKey(PathStep, on_delete=models.CASCADE, related_name='user_progress')
+    step = models.ForeignKey(Step, on_delete=models.CASCADE, related_name='user_progress')
     
     # Progress status
     status = models.CharField(max_length=50, choices=[
@@ -53,10 +53,10 @@ class UserStepProgress(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        unique_together = ('user', 'path_step')
+        unique_together = ('user', 'step')
     
     def __str__(self):
-        return f"{self.user.username} - {self.path_step.title} ({self.status})"
+        return f"{self.user.username} - {self.step.title} ({self.status})"
 
 class Achievement(models.Model):
     """Achievements that users can earn"""
