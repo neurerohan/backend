@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-from learning_paths.models import LearningPath, PathStep, Skill
+from learning_paths.models import LearningPath, Step, Skill
 
 class ResourceType(models.Model):
     """Types of resources (e.g., video, article, course)"""
@@ -82,7 +82,7 @@ class ResourceRecommendation(models.Model):
     
     # Recommendation target (either learning path or path step)
     learning_path = models.ForeignKey(LearningPath, on_delete=models.CASCADE, null=True, blank=True, related_name='recommended_resources')
-    path_step = models.ForeignKey(PathStep, on_delete=models.CASCADE, null=True, blank=True, related_name='recommended_resources')
+    path_step = models.ForeignKey(Step, on_delete=models.CASCADE, null=True, blank=True, related_name='recommended_resources')
     
     # Recommendation metadata
     is_required = models.BooleanField(default=False)
