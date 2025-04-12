@@ -177,7 +177,7 @@ SIMPLE_JWT = {
 # CORS settings
 # Default list for development
 default_cors_origins = [
-    'http://localhost:3000',
+    'https://education.nyure.com.np',
     'http://127.0.0.1:3000',
 ]
 # Get origins from environment variable, split by comma, strip whitespace
