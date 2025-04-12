@@ -194,8 +194,8 @@ class MentorReviewViewSet(viewsets.ModelViewSet):
         mentorship_id = self.request.data.get('mentorship_id')
         rating = self.request.data.get('rating')
         
-        if not rating or not isinstance(rating, int) or rating &lt; 1 or rating > 5:
-            raise serializers.ValidationError({'rating': 'Rating must be an integer between 1 and 5.'})
+        if not rating or not isinstance(rating, int) or rating < 1 or rating > 5:
+            return Response({'detail': 'Rating must be an integer between 1 and 5.'}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             mentorship = Mentorship.objects.get(id=mentorship_id, mentee=self.request.user)
