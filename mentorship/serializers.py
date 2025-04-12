@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from .models import MentorProfile, MentorshipRequest, Mentorship, MentorReview, MentorshipMessage
-from users.serializers import UserPublicProfileSerializer
+from users.serializers import UserProfileSerializer
 from learning_paths.serializers import SkillSerializer
 
 class MentorProfileSerializer(serializers.ModelSerializer):
-    user = UserPublicProfileSerializer(read_only=True)
+    user = UserProfileSerializer(read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
     
     class Meta:
@@ -13,7 +13,7 @@ class MentorProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ('user', 'rating', 'review_count', 'created_at', 'updated_at')
 
 class MentorshipRequestSerializer(serializers.ModelSerializer):
-    mentee = UserPublicProfileSerializer(read_only=True)
+    mentee = UserProfileSerializer(read_only=True)
     mentor = MentorProfileSerializer(read_only=True)
     skills_seeking = SkillSerializer(many=True, read_only=True)
     
@@ -23,7 +23,7 @@ class MentorshipRequestSerializer(serializers.ModelSerializer):
         read_only_fields = ('mentee', 'created_at', 'updated_at')
 
 class MentorshipSerializer(serializers.ModelSerializer):
-    mentee = UserPublicProfileSerializer(read_only=True)
+    mentee = UserProfileSerializer(read_only=True)
     mentor = MentorProfileSerializer(read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
     
@@ -41,7 +41,7 @@ class MentorReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ('mentorship', 'created_at', 'updated_at')
 
 class MentorshipMessageSerializer(serializers.ModelSerializer):
-    sender = UserPublicProfileSerializer(read_only=True)
+    sender = UserProfileSerializer(read_only=True)
     
     class Meta:
         model = MentorshipMessage
