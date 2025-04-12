@@ -175,33 +175,51 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-# Default list for development
-default_cors_origins = [
-    'https://education.nyure.com.np',
-    'http://127.0.0.1:3000',
-]
-# Get origins from environment variable, split by comma, strip whitespace
-env_cors_origins = [
-    origin.strip() 
-    for origin in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') 
-    if origin.strip() # Ensure we don't add empty strings
-]
+if DEBUG:
+    # Allow local development origins when DEBUG is True
+    CORS_ALLOWED_ORIGINS = [
+        'https://education.nyure.com.np',
+        'http://127.0.0.1:3000',
+        # Add any other local frontend origins if needed
+    ]
+else:
+    # In production, strictly rely on the environment variable
+    env_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+    CORS_ALLOWED_ORIGINS = [
+        origin.strip()
+        for origin in env_origins.split(',')
+        if origin.strip()
+    ]
+    # Log a warning if the environment variable is not set in production
+    if not CORS_ALLOWED_ORIGINS:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error("CRITICAL: CORS_ALLOWED_ORIGINS environment variable is not set or empty in production! "
+                       "No frontend origins will be allowed access.")
 
-# Combine default and environment origins, remove duplicates
-CORS_ALLOWED_ORIGINS = list(set(default_cors_origins + env_cors_origins))
-
-# If in production (DEBUG=False) and no specific origins were added via environment, 
-# log a warning or raise an error, as allowing only localhost is likely incorrect.
-if not DEBUG and len(env_cors_origins) == 0:
-    # Option 1: Log a warning (safer for initial setup)
-    import logging
-    logger = logging.getLogger(__name__)
-    logger.warning("CORS_ALLOWED_ORIGINS environment variable is not set or empty in production. "
-                   "Only default development origins are allowed. Set this variable with your frontend domain(s).")
-    # Option 2: Raise an error (stricter)
-    # raise ImproperlyConfigured("CORS_ALLOWED_ORIGINS environment variable must be set in production.")
-
+# Allow cookies to be sent with CORS requests (if needed for authentication)
 CORS_ALLOW_CREDENTIALS = True
+
+# Optionally, be more explicit about allowed methods and headers (defaults are often sufficient)
+# CORS_ALLOW_METHODS = [
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+# ]
+# CORS_ALLOW_HEADERS = [
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+# ]
 
 # Security settings for production
 if not DEBUG:

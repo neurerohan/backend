@@ -19,7 +19,7 @@ services:
           name: nyure-education-db
           property: connectionString
       - key: CORS_ALLOWED_ORIGINS
-        value: https://ed.nyure.com.np
+        value: https://education.nyure.com.np
 
   # Frontend service (optional if you're deploying frontend elsewhere)
   - type: web
@@ -29,7 +29,7 @@ services:
     startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: https://nyure-education-api.onrender.com/api
+        value: https://ed.onrender.com/api
 
 # Database
 databases:
