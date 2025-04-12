@@ -57,7 +57,7 @@ class LearningPathViewSet(viewsets.ModelViewSet):
         rating = request.data.get('rating')
         review = request.data.get('review', '')
         
-        if not rating or not isinstance(rating, int) or rating &lt; 1 or rating > 5:
+        if not rating or not isinstance(rating, int) or rating < 1 or rating > 5:
             return Response({'detail': 'Rating must be an integer between 1 and 5.'}, status=status.HTTP_400_BAD_REQUEST)
         
         # Get user enrollment
