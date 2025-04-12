@@ -17,13 +17,28 @@ class UserViewSet(viewsets.ModelViewSet):
     API endpoint for users
     """
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    # Default permissions: Allow authenticated users to read.
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
+            # Use profile serializer for read actions
             return UserProfileSerializer
+        # Use full serializer for write actions (checked by get_permissions)
         return UserSerializer
+    
+    def get_permissions(self):
+        """Instantiates and returns the list of permissions that this view requires."""
+        if self.action in ['update', 'partial_update', 'destroy', 'update_profile', 'change_password']:
+            # Only owner can edit/delete their own profile or change password
+            self.permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+        elif self.action == 'list':
+            # Only admins can list all users (optional: adjust if needed)
+            self.permission_classes = [permissions.IsAdminUser]
+        else:
+            # Default: IsAuthenticated for retrieve, me
+            self.permission_classes = [permissions.IsAuthenticated]
+        return super().get_permissions()
     
     @action(detail=False, methods=['get'])
     def me(self, request):

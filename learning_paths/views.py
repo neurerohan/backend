@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Skill, LearningPath, Step, UserLearningPath
 from .serializers import SkillSerializer, LearningPathSerializer, StepSerializer, UserLearningPathSerializer
 from users.permissions import IsOwnerOrReadOnly
+from django.db.models import Q
 
 class SkillViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Skill.objects.all()
@@ -23,8 +24,8 @@ class LearningPathViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        # Show public paths and private paths created by the user
-        return LearningPath.objects.filter(is_public=True) | LearningPath.objects.filter(creator=user)
+        # Show published paths and private paths created by the user
+        return LearningPath.objects.filter(Q(is_published=True) | Q(creator=user))
     
     @action(detail=True, methods=['post'])
     def enroll(self, request, pk=None):

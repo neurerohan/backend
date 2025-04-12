@@ -10,17 +10,21 @@ from .serializers import (
 from users.permissions import IsOwnerOrReadOnly
 
 class ResourceTypeViewSet(viewsets.ReadOnlyModelViewSet):
+    """Read-only endpoint for Resource Types."""
     queryset = ResourceType.objects.all()
     serializer_class = ResourceTypeSerializer
+    # Allow any authenticated user to read
     permission_classes = [permissions.IsAuthenticated]
 
 class ResourceProviderViewSet(viewsets.ReadOnlyModelViewSet):
+    """Read-only endpoint for Resource Providers."""
     queryset = ResourceProvider.objects.all()
     serializer_class = ResourceProviderSerializer
+    # Allow any authenticated user to read
     permission_classes = [permissions.IsAuthenticated]
 
 class ResourceViewSet(viewsets.ModelViewSet):
-    queryset = Resource.objects.all()
+    queryset = Resource.objects.select_related('resource_type', 'provider').all()
     serializer_class = ResourceSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -146,24 +150,36 @@ class UserResourceViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     
     def get_queryset(self):
-        return UserResource.objects.filter(user=self.request.user)
+        # Also select related resource and its nested fields for efficiency
+        return UserResource.objects.filter(user=self.request.user)\
+               .select_related('resource__resource_type', 'resource__provider')
     
     @action(detail=False, methods=['get'])
     def bookmarked(self, request):
-        bookmarked = UserResource.objects.filter(user=request.user, is_bookmarked=True)
+        bookmarked = self.get_queryset().filter(is_bookmarked=True)
         serializer = UserResourceSerializer(bookmarked, many=True)
         return Response(serializer.data)
     
     @action(detail=False, methods=['get'])
     def completed(self, request):
-        completed = UserResource.objects.filter(user=request.user, is_completed=True)
+        completed = self.get_queryset().filter(is_completed=True)
         serializer = UserResourceSerializer(completed, many=True)
         return Response(serializer.data)
 
 class ResourceRecommendationViewSet(viewsets.ModelViewSet):
+    """Endpoint for Resource Recommendations. Read for authenticated, Write for admin."""
     serializer_class = ResourceRecommendationSerializer
+    # Default: Allow authenticated users to read
     permission_classes = [permissions.IsAuthenticated]
     
+    def get_permissions(self):
+        """Set permissions: Read for authenticated, Write for admin."""
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes = [permissions.IsAdminUser]
+        else:
+            self.permission_classes = [permissions.IsAuthenticated]
+        return super().get_permissions()
+
     def get_queryset(self):
         learning_path_id = self.request.query_params.get('learning_path')
         path_step_id = self.request.query_params.get('path_step')
