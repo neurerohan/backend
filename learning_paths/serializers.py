@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Skill, LearningPath, Step, UserLearningPath
-from users.serializers import UserPublicProfileSerializer
+from users.serializers import UserProfileSerializer
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +16,7 @@ class StepSerializer(serializers.ModelSerializer):
 
 class LearningPathSerializer(serializers.ModelSerializer):
     steps = StepSerializer(many=True, read_only=True)
-    creator = UserPublicProfileSerializer(read_only=True)
+    creator = UserProfileSerializer(read_only=True)
     
     class Meta:
         model = LearningPath
