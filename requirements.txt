@@ -6,6 +6,7 @@ django-filter==23.3
 django-allauth==0.57.0
 dj-rest-auth==5.0.1
 drf-yasg==1.21.7
+djangorestframework-nested==1.0.0
 
 # Database
 psycopg2-binary==2.9.9
