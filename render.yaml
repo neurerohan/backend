@@ -29,7 +29,7 @@ services:
     startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: https://ed.onrender.com/api
+        value: https://ed.nyure.com.np
 
 # Database
 databases:
