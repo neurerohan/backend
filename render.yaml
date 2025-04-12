@@ -29,7 +29,7 @@ services:
     startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: https://course-compass-api.onrender.com/api
+        value: https://nyure-education-api.onrender.com/api
 
 # Database
 databases:
