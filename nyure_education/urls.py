@@ -43,7 +43,7 @@ urlpatterns = [
     path('api/learning-paths/', include('learning_paths.urls')),
     path('api/resources/', include('resources.urls')),
     path('api/progress/', include('progress.urls')),
-    path('api/mentorship/', include('mentorship.urls')),
+    # path('api/mentorship/', include('mentorship.urls')), # Temporarily commented out
     # path('api/jobs/', include('jobs.urls')), # Temporarily commented out
     # path('api/forums/', include('forums.urls')), # Temporarily commented out
 ]
