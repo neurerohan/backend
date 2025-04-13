@@ -45,7 +45,7 @@ urlpatterns = [
     path('api/progress/', include('progress.urls')),
     path('api/mentorship/', include('mentorship.urls')),
     path('api/jobs/', include('jobs.urls')),
-    path('api/forums/', include('forums.urls')),
+    # path('api/forums/', include('forums.urls')), # Temporarily commented out
 ]
 
 # Serve media files in development
