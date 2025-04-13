@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Company, JobListing, JobApplication, SavedJob
-from users.serializers import UserPublicProfileSerializer
+from users.serializers import UserProfileSerializer
 from learning_paths.serializers import SkillSerializer
 
 class CompanySerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class JobListingSerializer(serializers.ModelSerializer):
         return False
 
 class JobApplicationSerializer(serializers.ModelSerializer):
-    user = UserPublicProfileSerializer(read_only=True)
+    user = UserProfileSerializer(read_only=True)
     job_listing = JobListingSerializer(read_only=True)
     
     class Meta:
