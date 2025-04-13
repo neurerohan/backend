@@ -3,7 +3,7 @@ from .models import (
     ForumCategory, ForumTopic, ForumPost, PostLike,
     StudyGroup, StudyGroupMember, StudyGroupMessage
 )
-from users.serializers import UserPublicProfileSerializer
+from users.serializers import UserProfileSerializer
 from learning_paths.serializers import LearningPathSerializer, SkillSerializer
 
 class ForumCategorySerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class ForumCategorySerializer(serializers.ModelSerializer):
         read_only_fields = ('topic_count', 'post_count', 'created_at', 'updated_at')
 
 class ForumTopicSerializer(serializers.ModelSerializer):
-    author = UserPublicProfileSerializer(read_only=True)
+    author = UserProfileSerializer(read_only=True)
     category = ForumCategorySerializer(read_only=True)
     learning_path = LearningPathSerializer(read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
@@ -24,7 +24,7 @@ class ForumTopicSerializer(serializers.ModelSerializer):
         read_only_fields = ('author', 'view_count', 'reply_count', 'created_at', 'updated_at', 'last_activity')
 
 class ForumPostSerializer(serializers.ModelSerializer):
-    author = UserPublicProfileSerializer(read_only=True)
+    author = UserProfileSerializer(read_only=True)
     is_liked = serializers.SerializerMethodField()
     
     class Meta:
@@ -39,7 +39,7 @@ class ForumPostSerializer(serializers.ModelSerializer):
         return False
 
 class StudyGroupSerializer(serializers.ModelSerializer):
-    creator = UserPublicProfileSerializer(read_only=True)
+    creator = UserProfileSerializer(read_only=True)
     learning_path = LearningPathSerializer(read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
     member_count = serializers.SerializerMethodField()
@@ -53,7 +53,7 @@ class StudyGroupSerializer(serializers.ModelSerializer):
         return obj.members.count()
 
 class StudyGroupMemberSerializer(serializers.ModelSerializer):
-    user = UserPublicProfileSerializer(read_only=True)
+    user = UserProfileSerializer(read_only=True)
     study_group = StudyGroupSerializer(read_only=True)
     
     class Meta:
@@ -62,7 +62,7 @@ class StudyGroupMemberSerializer(serializers.ModelSerializer):
         read_only_fields = ('joined_at',)
 
 class StudyGroupMessageSerializer(serializers.ModelSerializer):
-    sender = UserPublicProfileSerializer(read_only=True)
+    sender = UserProfileSerializer(read_only=True)
     
     class Meta:
         model = StudyGroupMessage
