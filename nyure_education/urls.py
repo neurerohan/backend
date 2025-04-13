@@ -44,7 +44,7 @@ urlpatterns = [
     path('api/resources/', include('resources.urls')),
     path('api/progress/', include('progress.urls')),
     path('api/mentorship/', include('mentorship.urls')),
-    path('api/jobs/', include('jobs.urls')),
+    # path('api/jobs/', include('jobs.urls')), # Temporarily commented out
     # path('api/forums/', include('forums.urls')), # Temporarily commented out
 ]
 
